@@ -20,7 +20,7 @@ PatentsView provides FREE USPTO patents, which can be downloaded [here](http://w
 python index_patentsview.py --patent [patent.tsv] --claim [claim.tsv] --summary [brf_sum_text.tsv]
 ```
 
-For each input file, a temporal index is generated in Elasticsearch which are `patent_tmp`, `claim_tmp` and `summary_tmp` respectively. At last, the above file generates file `es.tmp.json` in the directory where the `[patent.tsv]` is.
+For each input file, a temporal index is generated in Elasticsearch which are `patent_tmp`, `claim_tmp` and `summary_tmp` respectively. At last, the above script generates file `es.tmp.json` in the directory where the `[patent.tsv]` is.
 
 ## Load dataset to Elasticsearch
 
