@@ -1,6 +1,6 @@
 # PatentsView in Elasticsearch
 
-Want to explore the USPTO patnets in a search engine? Use these scripts to put [PatentsView](http://www.patentsview.org/web/#viz/relationships) dataset in the Elasticsearch!
+Want to explore the USPTO patents in a search engine? Use these scripts to put [PatentsView](http://www.patentsview.org/web/#viz/relationships) dataset in the Elasticsearch!
 
 ## Download PatentsView
 
@@ -14,7 +14,7 @@ PatentsView provides FREE USPTO patents, which can be downloaded [here](http://w
 
 ## Indexing PatentsView data
 
-Title, abstract, claim and summary of a patent are saved in different files as shown in above table. As a result, one has to join those three files by the patent id column to have all the context fields of a patent available. The most straightforward way is to load file into memeory and join together using `pandas` or `dask`, as long as you have enough memory. An alternative way is to separately load data into Elasticsearch, and then join different fields together into a file using Elasticsearch's match function.
+`Title`, `abstract`, `claim` and `summary` of a patent are saved in different files as shown in the above table. As a result, one has to join all three files by the patent id column to have all the context fields of a patent available. The most straightforward way is to load the file into memory and join together using `pandas` or `dask`, as long as you have enough memory. An alternative way is to load data into Elasticsearch separately and then join different fields together using Elasticsearch's match function.
 
 ```bash
 python index_patentsview.py --patent [patent.tsv] --claim [claim.tsv] --summary [brf_sum_text.tsv]
