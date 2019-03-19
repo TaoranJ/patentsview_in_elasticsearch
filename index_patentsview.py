@@ -41,8 +41,7 @@ def index_patent(ipath):
                      how='any', inplace=True)
         with open(opath, 'w') as ofp:
             for _, patent in chunk.iterrows():
-                json.dump({'index': {'_index': index_name,
-                           '_id': patent['id']}}, ofp)
+                json.dump({'index': {'_index': index_name}}, ofp)
                 ofp.write('\n')
                 json.dump({'id': patent['id'],
                            'date': str(patent['date'].date()),
@@ -83,11 +82,10 @@ def index_claim(ipath):
                      how='any', inplace=True)
         with open(opath, 'w') as ofp:
             for _, claim in chunk.iterrows():
-                json.dump({'index': {'_index': index_name,
-                           '_id': claim['uuid']}}, ofp)
+                json.dump({'index': {'_index': index_name}}, ofp)
                 ofp.write('\n')
                 json.dump({'id': claim['patent_id'],
-                           'claim': claim['text'].lower().strip()}, ofp)
+                           'text': claim['text'].lower().strip()}, ofp)
                 ofp.write('\n')
         bulk_insert(index_name, opath)
     refresh(index_name)
@@ -120,18 +118,17 @@ def index_summary(ipath):
                      how='any', inplace=True)
         with open(opath, 'w') as ofp:
             for _, summary in chunk.iterrows():
-                json.dump({'index': {'_index': index_name,
-                           '_id': summary['uuid']}}, ofp)
+                json.dump({'index': {'_index': index_name}}, ofp)
                 ofp.write('\n')
                 json.dump({'id': summary['patent_id'],
-                           'summary': summary['text'].lower().strip()}, ofp)
+                           'text': summary['text'].lower().strip()}, ofp)
                 ofp.write('\n')
         bulk_insert(index_name, opath)
     refresh(index_name)
     os.remove(opath)
 
 
-def index_patentsview_for_elasticsearch():
+def index_patentsview_for_elasticsearch(args):
     """Index patentsview data before inserting data into elasticsearch."""
 
     opath = os.path.join(os.path.dirname(args.patent), 'es.tmp.json')
@@ -145,14 +142,14 @@ def index_patentsview_for_elasticsearch():
             claims = elasticsearch.helpers.scan(
                     es, index='claim_tmp',
                     query={'query': {'match': {'id': pid}}})
-            patent['claim'] = ' '.join([claim['_source']['claim']
+            patent['claim'] = ' '.join([claim['_source']['text']
                                         for claim in claims])
             summaries = elasticsearch.helpers.scan(
                     es, index='summary_tmp',
                     query={'query': {'match': {'id': pid}}})
-            patent['summary'] = ' '.join([summary['_source']['summary']
+            patent['summary'] = ' '.join([summary['_source']['text']
                                           for summary in summaries])
-            json.dump({'index': {'_index': 'patentsview', '_id': pid}}, ofp)
+            json.dump({'index': {'_index': 'patentsview'}}, ofp)
             ofp.write('\n')
             json.dump(patent, ofp)
             ofp.write('\n')
@@ -167,11 +164,11 @@ if __name__ == "__main__":
     pparser.add_argument('--summary', required=True, type=str,
                          help='Path to brf_sum_text.tsv')
     args = pparser.parse_args()
-    if args.patent:
-        index_patent(args.patent)
-    if args.claim:
-        index_claim(args.claim)
-    if args.summary:
-        index_summary(args.summary)
-    time.sleep(120)  # make sure that elasticsearch have time to refresh
-    index_patentsview_for_elasticsearch()
+    # if args.patent:
+    #     index_patent(args.patent)
+    # if args.claim:
+    #     index_claim(args.claim)
+    # if args.summary:
+    #     index_summary(args.summary)
+    # time.sleep(120)  # make sure that elasticsearch have time to refresh
+    index_patentsview_for_elasticsearch(args)
