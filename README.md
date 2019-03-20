@@ -26,7 +26,7 @@ For each input file, a temporal index is generated in Elasticsearch which are `p
 
 By default, Elasticsearch supports to insert file less than `100MB`. So if you don't want to change the default configuration of Elasticsearch, use the script below to split original files to smaller ones
 ```bash
-mkdir [patent.es] && split -d -l 80000 [es.tmp.json] [patent.es]/patent. && rm [es.tmp.json]
+mkdir [patent.es] && split -d -l 5000 [es.tmp.json] [patent.es]/patent. && rm [es.tmp.json]
 ```
 where `[es.tmp.json]` is data generated in above step.
 
