@@ -164,11 +164,11 @@ if __name__ == "__main__":
     pparser.add_argument('--summary', required=True, type=str,
                          help='Path to brf_sum_text.tsv')
     args = pparser.parse_args()
-    # if args.patent:
-    #     index_patent(args.patent)
-    # if args.claim:
-    #     index_claim(args.claim)
-    # if args.summary:
-    #     index_summary(args.summary)
-    # time.sleep(120)  # make sure that elasticsearch have time to refresh
+    if args.patent:
+        index_patent(args.patent)
+    if args.claim:
+        index_claim(args.claim)
+    if args.summary:
+        index_summary(args.summary)
+    time.sleep(120)  # make sure that elasticsearch have time to refresh
     index_patentsview_for_elasticsearch(args)
